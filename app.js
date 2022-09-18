@@ -1,20 +1,14 @@
-const path = require("path");
+const http = require("http");
 const fs = require("fs");
 
-console.log(__dirname);
-console.log(path.join("subfolder"));
-console.log(path.resolve("subfolder"));
+const server = http.createServer((req, res) => {
+  const fileStream = fs.createReadStream("./input.txt", "utf8");
 
-fs.readFile("./input.txt", "utf8", (err, result) => {
-  if (err) {
-    console.log(err);
-  } else {
-    fs.writeFile("./output.txt", result, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(result);
-      }
-    });
-  }
+  fileStream.on("open", () => {
+    fileStream.pipe(res);
+  });
+});
+
+server.listen(3000, () => {
+  console.log("Server is listening on port 3000");
 });
